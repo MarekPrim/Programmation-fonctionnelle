@@ -92,11 +92,11 @@ let string_of_int_list = map string_of_int
 ```ocaml
 let rec fold_right l e f = (* e = cas de base *)
 match l with 
-| l -> e
+| [] -> e
 | t::q -> f t (fold_right q e f);;
 
 let taille l = 
-xxx l 0 (fun _ tete size_queue -> size_queue+1);;
+fold_right l 0 (fun _ tete size_queue -> size_queue+1);;
 
 let map f l = 
 	fold_right (fun _ t map_queue -> (f t)::map_queue);;
@@ -120,4 +120,116 @@ fold_left : ( 'b -> 'a -> 'b ) -> 'b -> a' list -> 'b
 let rev_right list = fold_right (fun t revq -> revq@[t] ) list [];; (*O(n^2)*)
 
 let rev_left list = fold_left (fun rev_firsts last -> last::rev_firsts) [] list; (* O(n) *)
+```
+
+## Définition de types
+Un constructeur commence toujours par une majuscule.
+
+Type ``option`` est une structure de donnée qui permet de spécifier un choix entre une situation normale et une situation exceptionnelle.
+
+### Type récursif
+
+Exemple : Personne avec enfant, parents
+Réprésentation sous forme d'arbre.
+Les types récursifs paramétrés ne sont mêmes pas nécessairement homogènes.
+**Powerlist**
+
+![[Pasted image 20230306102939.png]]
+
+### Arbre binaire
+
+![[Pasted image 20230306103436.png]]
+
+``` ocaml
+let rec tree_map f arb =
+match arb with
+| Empty -> Empty
+| Node (n,g,d) -> Node (f n, tree_map f g, tree_map f d)
+```
+
+```ocaml
+let rec tree_fold f e arb =
+match arb with
+| Empty -> e
+| Node (n,g,d) -> f n (tree_fold f e g) (tree_fold f e d)
+```
+
+Le fold prend une fonction avec la racine, le fils droit déjà traité, le fils gauche déja traité; et renvoie le résultat.
+
+```ocaml
+let rec cardinal arb =
+tree_fold (fun _ cd cg -> 1+cd+cg) 0 arb
+```
+
+Le fold se généralise sur tous les types OCaml. Il "remplace" les constructeurs du type par des appels de fonctions de même arité.
+(Pour les list, Nil=Cas de base et Cons).
+
+```ocaml
+let rec pronfondeur a = match a with
+| Vide -> 0
+| Noeud(g,r,d) -> 1 + pfndeur g
+
+let noeud g r d = 
+ if pfd g < pfd d then Noeud (d,r,g) else Noeud(g,r,d)
+
+let rec union arb1 arb2 = 
+	match a1,a2 w/
+	| Vide,_ -> a2
+	| _,Vide -> a1
+	| Noeud (g1,r1,d1), Noeud (g2,r2,d2) ->
+		if (r1 > r2) then noeud g2 r2 (union a1 d2)
+		else noeud g1 r1 (union a2 d1)
+```
+
+```ocaml
+let insertion el arb =
+ union (Noeud (Vide,el,Vide)) arb
+```
+
+#### Parcours d'arbres binaires
+
+![[Pasted image 20230306105938.png]]
+
+![[Pasted image 20230306110046.png]]
+
+
+### Arbre n-aire
+
+```ocaml
+
+type 'a arbre_naire = Noeud of 'a * 'a arbre_naire list
+
+let cons el list_arbre_naire =
+Noeud (el, list_arbre_naire )
+
+let racine (Noeud (r,_)) = r
+
+let fils (Noeud (_,fils)) = fils
+
+let rec map_arbre_naire f (Noeud (r, list_arbre_naire)) =
+Noeud (f r, List.map (map_arbre_naire f) list_arbre_naire)
+
+let rec fold_arbre_naire f e (Noeud (r,list_arbre_naire)) =
+f r (List.map (fold_arbre_naire f ) list_arbre_naire)
+
+let rec cardinal arb =
+fold_arbre_naire (fun _ lcf -> 1 + List.fold_right (+) lcf 0) 0 arb
+```
+
+
+### Exercices
+Couple (profondeur min, profondeur max)
+
+Sur arbre binaire :
+
+```ocaml
+let profondeurs arbre =
+tree_fold (fun _ pfmin_g pfmax_g pfmin_d pfmax_d ->          (1 + min pfmin_g pfmin_d),(1+ max pfmax_g pfmax_d)) (0,0) arbre
+```
+
+Sur arbre n-aire :
+
+```
+Même chose mais on récupère une liste des max et des min.
+On doit faire le max des maxs et le min des mins.
 ```
