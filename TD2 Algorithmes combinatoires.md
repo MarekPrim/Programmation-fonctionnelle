@@ -56,7 +56,7 @@ permutations (n+1) = (n+1 == element à toutes les positions possibles == INSERT
 ```ocaml
 a' -> a' list -> a' list list
 
-insertion 4 [1;2;3] = [[4;1;2;3;],[1;4;2;3],[1;2;4;3],[1;2;3;4]]
+insertion 4 [1;2;3] = [[4;1;2;3],[1;4;2;3],[1;2;4;3],[1;2;3;4]]
 insertion 4 [2;3] = [[4;2;3],[2;4;3],[2;3;4]]
 insertion 4 [1] = [[4;1],[1;4]]
 insertion 4 [] = [[4]]
@@ -88,7 +88,7 @@ permutations [2;3] = [[2;3],[3;2]]
 
 permuations [1;2;3] = insertion 3 (permutation [2;3])
 permutations [2;3] = insertion 3 (permutation [2])
-permutations [2] = inserion 2 (permutations [])
+permutations [2] = insertion 2 (permutations [])
 
 let rec permutations ensemble =
 match ensemble with

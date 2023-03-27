@@ -40,7 +40,7 @@ let isequal x n = match x with
 
 | _ -> false;;
 ```
-Renvoie toujours true car le n dans le premier cas est un masquage de la variable n, avec n' = x, d'où le passage obligatoire dans le premier cas.
+Renvoie toujours true car le n dans le premier cas est un masquage de la variable n, aveco n' = x, d'où le passage obligatoire dans le premier cas.
 Le filtrage est une **affectation**, et non une **conditionelle**.
 
 ## Liste et itérateurs de liste

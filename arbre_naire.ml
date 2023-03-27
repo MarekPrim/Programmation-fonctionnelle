@@ -17,3 +17,5 @@ let rec fold_arbre_naire f e (Noeud (r,list_arbre_naire)) =
 let rec cardinal arb =
   fold_arbre_naire (fun _ lcf -> (1 + List.fold_left (+) 0 lcf)) 0 arb;;
 
+  
+

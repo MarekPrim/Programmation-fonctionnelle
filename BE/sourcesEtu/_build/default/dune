@@ -1,0 +1,6 @@
+(library
+ (name be)
+ (inline_tests)
+ (modules rationnel)
+ (preprocess
+  (pps ppx_inline_test)))
